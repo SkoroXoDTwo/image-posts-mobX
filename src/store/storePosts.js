@@ -1,29 +1,44 @@
-import { makeObservable, observable, action, computed } from "mobx";
+import { makeAutoObservable } from "mobx";
+import axios from "axios";
 
 class Store {
   constructor() {
-    makeObservable(this, {
-      posts: observable,
-      loadPosts: action,
-      addPosts: action,
-    });
+    makeAutoObservable(this);
   }
 
-  posts = [];
-
-  addPosts = (data) => {
-    this.posts = data;
+  posts = {
+    status: "idle",
+    list: [],
+    error: null,
   };
 
-  loadPosts = () => {
-    fetch("https://jsonplaceholder.typicode.com/posts?_limit=10&_page=0")
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        this.addPosts(data);
-      });
+  addPosts = (data) => {
+    this.posts.list = data;
+  };
+
+  setStatus = (status) => {
+    this.posts.status = status;
+  };
+
+  setError = (err) => {
+    this.posts.error = err;
+  };
+
+  loadPosts = async () => {
+    this.setStatus("loading");
+    this.setError(null);
+
+    try {
+      this.setStatus("resolved");
+      const posts = await axios.get(
+        "https://jsonplaceholder.typicode.com/posts?_limit=10&_page=0"
+      );
+      this.addPosts(posts.data);
+    } catch (err) {
+      this.setStatus("rejected");
+      this.setError(err);
+      console.log(err.message);
+    }
   };
 }
 
