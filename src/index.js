@@ -5,7 +5,7 @@ import "./vendor/normalize.scss";
 import "./vendor/fonts.scss";
 import "./index.scss";
 
-import App from './components/App';
+import App from './components/App/App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
