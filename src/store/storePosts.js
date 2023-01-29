@@ -24,14 +24,14 @@ class Store {
     this.posts.error = err;
   };
 
-  loadPosts = async () => {
+  loadPosts = async (page) => {
     this.setStatus("loading");
     this.setError(null);
 
     try {
       this.setStatus("resolved");
       const posts = await axios.get(
-        "https://jsonplaceholder.typicode.com/posts?_limit=10&_page=0"
+        `https://jsonplaceholder.typicode.com/posts?_limit=10&_page=${page}`
       );
       this.addPosts(posts.data);
     } catch (err) {

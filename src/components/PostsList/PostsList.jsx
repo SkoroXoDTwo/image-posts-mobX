@@ -3,16 +3,17 @@ import Post from "../Post/Post";
 import { useEffect } from "react";
 import { observer } from "mobx-react";
 import { storePosts } from "../../store/storePosts";
+import { storePage } from "../../store/storePage";
 import { toJS } from "mobx";
 
 const PostsList = observer(() => {
   const { loadPosts } = storePosts;
   const posts = toJS(storePosts.posts.list);
-  console.log(posts);
+  const page = toJS(storePage.page);
 
   useEffect(() => {
-    loadPosts();
-  }, []);
+    loadPosts(page);
+  }, [page]);
 
   return (
     <ul className="posts-list">
